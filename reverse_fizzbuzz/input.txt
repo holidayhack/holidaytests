@@ -1,6 +1,4 @@
-15
--
--
+10
 Fizz
 -
 Buzz
@@ -11,6 +9,3 @@ Fizz
 Buzz
 -
 Fizz
--
--
-FizzBuzz

@@ -18,9 +18,31 @@ FizzBuzz
 readFizzBuzzLine(FILE *fp) {
   fscanf(fp, "%s", buffer);
 
+  if (buffer[0] == '-') return kEmpty;
   if (buffer[0] == 'B') return kBuzz;
   if (buffer[4] == 'B') return kFizzBuzz;
   if (buffer[0] == 'F') return kFizz;
+  return kEmpty;
+}
+
+bool
+writeFizzBuzzLine(FILE *fp, FizzBuzz fb) {
+  switch(fb) {
+    case kEmpty: fprintf(fp, "-\r\n"); break;
+    case kFizz: fprintf(fp, "Fizz\r\n"); break;
+    case kBuzz: fprintf(fp, "Buzz\r\n"); break;
+    case kFizzBuzz: fprintf(fp, "FizzBuzz\r\n"); break;
+  };
+}
+
+FizzBuzz
+fizzBuzzFromNumber(int num) {
+  bool mod3 = (num % 3 == 0);
+  bool mod5 = (num % 5 == 0);
+
+  if (mod3 && mod5) return kFizzBuzz;
+  if (mod3) return kFizz;
+  if (mod5) return kBuzz;
   return kEmpty;
 }
 
@@ -28,19 +50,37 @@ readFizzBuzzLine(FILE *fp) {
 // ________________________________________
 bool
 solve(FizzBuzz *pattern, int *output, int count) {
-  int i = 0;
-  for (i = 0; i < count; i++) {
-    switch(pattern[i]) {
-      case kEmpty: printf("Empty\r\n"); break;
-      case kFizz: printf("Fizz\r\n"); break;
-      case kBuzz: printf("Buzz\r\n"); break;
-      case kFizzBuzz: printf("FizzBuzz\r\n"); break;
-    }
-
-    output[i] = i;
+  int diff = 1, num = 0;
+  while (diff > 0) {
+    num += diff;
+    output[0] = num;
+    diff = fillOutput(pattern, output, count);
   }
 
   return true;
+}
+
+int
+fillOutput(FizzBuzz *pattern, int *output, int count) {
+  FizzBuzz fb = kEmpty;
+  int i, num;
+
+  for (i = 0, num = output[0]; i < count; i++, num++) {
+    if (fizzBuzzFromNumber(num) != (fb = pattern[i])) {
+      // fast-forward to next possible cases
+      // i.e. advance 1 to 3 if it's a fizz (skipping 2)
+      switch(fb) {
+        case kEmpty: return 1;
+        case kFizz: return 3 - (num % 3);
+        case kBuzz: return 5 - (num % 5);
+        case kFizzBuzz: return 15 - (num % 15);
+      }
+    }
+
+    output[i] = num;
+  }
+
+  return 0;
 }
 
 
@@ -49,7 +89,6 @@ int
 main() {
   int i = 0;
   buffer = malloc(sizeof(char) * 16);
-
 
   // read input fizzbuzz pattern
   FILE *in = fopen("./input.txt", "r");
@@ -65,7 +104,6 @@ main() {
 
   fclose(in); in = NULL;
 
-
   // figure out original sequence
   int *result = malloc(sizeof(int) * count);
   solve(pattern, result, count);
@@ -76,7 +114,7 @@ main() {
 
   fclose(out); out = NULL;
 
-
+  // cleanup
   free(result); result = NULL;
   free(pattern); pattern = NULL;
   free(buffer); buffer = NULL;
