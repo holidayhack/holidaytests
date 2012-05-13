@@ -1,7 +1,5 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <strings.h>
 
 
 char *buffer = NULL;
@@ -23,16 +21,6 @@ readFizzBuzzLine(FILE *fp) {
   if (buffer[4] == 'B') return kFizzBuzz;
   if (buffer[0] == 'F') return kFizz;
   return kEmpty;
-}
-
-bool
-writeFizzBuzzLine(FILE *fp, FizzBuzz fb) {
-  switch(fb) {
-    case kEmpty: fprintf(fp, "-\r\n"); break;
-    case kFizz: fprintf(fp, "Fizz\r\n"); break;
-    case kBuzz: fprintf(fp, "Buzz\r\n"); break;
-    case kFizzBuzz: fprintf(fp, "FizzBuzz\r\n"); break;
-  };
 }
 
 FizzBuzz
@@ -88,19 +76,17 @@ fillOutput(FizzBuzz *pattern, int *output, int count) {
 int
 main() {
   int i = 0;
-  buffer = malloc(sizeof(char) * 16);
+  buffer = malloc(sizeof(char) * 9); // 9 chars for FizzBuzz\0
 
   // read input fizzbuzz pattern
   FILE *in = fopen("./input.txt", "r");
   int count = 0;
   FizzBuzz *pattern = NULL;
 
-  fscanf(in, "%d\r\n", &count);
+  fscanf(in, "%d", &count);
   pattern = malloc(sizeof(FizzBuzz) * count);
-
-  for (i = 0; i < count; i++) {
+  for (i = 0; i < count; i++)
     pattern[i] = readFizzBuzzLine(in);
-  }
 
   fclose(in); in = NULL;
 
