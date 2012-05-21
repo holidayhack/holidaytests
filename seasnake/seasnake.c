@@ -2,30 +2,29 @@
 #include <stdlib.h>
 #include <curses.h>
 
-// _____________________________________________________________________________
-typedef struct {
-  int x, y;
-} Point;
+#include "point.h"
+#include "engine.h"
 
-Point *newPoint(int x, int y) {
-  Point *p = malloc(sizeof(Point));
-  p->x = x;
-  p->y = y;
-  return p;
+
+void
+initCurses() {
+  initscr();  // standard curses init
+  cbreak();   // turns-off console buffering
+  noecho();   // echo-less input
 }
 
-void freePoint(Point *point) { free(point); }
+void
+deInitCurses() {
+  endwin();
+}
 
 
-// _____________________________________________________________________________
 int
 main() {
   Point *p = newPoint(7, 7);
   char ch;
 
-  initscr();
-  cbreak();
-  noecho();
+  initCurses();
 
   while ((ch = getch()) != 'x') {
     mvaddch(0, 0, ch);
@@ -41,8 +40,7 @@ main() {
     mvaddch(p->y, p->x, 'x');
   }
 
-  endwin();
-
   freePoint(p);
+  deInitCurses();
   return 0;
 }
