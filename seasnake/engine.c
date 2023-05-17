@@ -1,34 +1,20 @@
 #include "engine.h"
-#include <curses.h>
 #include "point.h"
+#include <curses.h>
 
-
-void
-initCurses() {
-  initscr();  // standard curses init
-  cbreak();   // turns-off console buffering
-  noecho();   // echo-less input
+void initCurses() {
+  initscr(); // standard curses init
+  cbreak();  // turns-off console buffering
+  noecho();  // echo-less input
 }
 
-void
-deInitCurses() {
-  endwin();
-}
+void deInitCurses() { endwin(); }
 
+void initEngine() { initCurses(); }
 
-void
-initEngine() {
-  initCurses();
-}
+void deInitEngine() { deInitCurses(); }
 
-void
-deInitEngine() {
-  deInitCurses();
-}
-
-
-void
-engineStart() {
+void engineStart() {
   Point *p = newPoint(7, 7);
   char ch;
 
@@ -37,10 +23,18 @@ engineStart() {
     mvaddch(p->y, p->x, ' ');
 
     switch (ch) {
-      case 'i': p->y--; break;
-      case 'j': p->x--; break;
-      case 'k': p->y++; break;
-      case 'l': p->x++; break;
+    case 'i':
+      p->y--;
+      break;
+    case 'j':
+      p->x--;
+      break;
+    case 'k':
+      p->y++;
+      break;
+    case 'l':
+      p->x++;
+      break;
     }
 
     mvaddch(p->y, p->x, 'x');

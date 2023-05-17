@@ -1,13 +1,11 @@
+#include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <curses.h>
 
-#include "point.h"
 #include "engine.h"
+#include "point.h"
 
-
-int
-main() {
+int main() {
   initEngine();
   engineStart();
   deInitEngine();
