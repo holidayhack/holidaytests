@@ -5,6 +5,7 @@
 #define __ENGINE_H
 
 void initEngine();
+void engineStart();
 void deInitEngine();
 
 #endif
